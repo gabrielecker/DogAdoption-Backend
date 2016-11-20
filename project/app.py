@@ -6,6 +6,7 @@ app = Flask(__name__)
 app.config.from_object('project.config')
 db = SQLAlchemy(app)
 
+# Import APIs after SQLAlchemy otherwise it's a circular import.
 from views.dogs import DogAPI
 
 dog_view = DogAPI.as_view('dog_api')
