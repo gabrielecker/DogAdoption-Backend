@@ -3,7 +3,7 @@ from importlib import import_module
 from marshmallow import Schema, fields
 
 
-class RaceSchema(Schema):
+class BreedSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
 
@@ -11,7 +11,8 @@ class RaceSchema(Schema):
 class DogSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
-    race = fields.Nested(RaceSchema)
+    description = fields.Str()
+    breed = fields.Nested(BreedSchema)
     size = fields.Str()
     born_date = fields.DateTime()
 
@@ -23,4 +24,4 @@ class SchemaFactory():
             Class = getattr(import_module('utils.schemas'), '%sSchema' % cls)
             return Class(many=many)
         except:
-            return None
+            raise Exception('Error: Class %sSchema does not exist.' % cls)

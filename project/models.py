@@ -2,7 +2,7 @@
 from project.app import db
 
 
-class Race(db.Model):
+class Breed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
@@ -10,14 +10,15 @@ class Race(db.Model):
         self.name = name
 
     def __repr__(self):
-        return u'<Race %s>' % self.name
+        return u'<Breed %s>' % self.name
 
 
 class Dog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    race_id = db.Column(db.Integer, db.ForeignKey('race.id'))
-    race = db.relationship('Race', backref='dogs')
+    description = db.Column(db.String)
+    breed_id = db.Column(db.Integer, db.ForeignKey('breed.id'))
+    breed = db.relationship('Breed', backref='dogs')
     size = db.Column(db.String)
     born_date = db.Column(db.DateTime)
 
