@@ -3,19 +3,19 @@ from flask import jsonify, request
 from flask.views import MethodView
 from project.app import db
 from project.models import Dog
-from utils.schemas import SchemaFactory
+from utils.schemas import SchemaCreator
 
 
 class DogAPI(MethodView):
+    _parser, _list_parser = SchemaCreator.get_schemas('Dog')
+
     def get(self, id):
         if id is None:
             dogs = Dog.query.all()
-            parser = SchemaFactory.get_schema('Dog', True)
-            return jsonify(parser.dump(dogs).data)
+            return jsonify(self._list_parser.dump(dogs).data)
         else:
             dog = Dog.query.get(id)
-            parser = SchemaFactory.get_schema('Dog')
-            return jsonify(parser.dump(dog).data)
+            return jsonify(self._parser.dump(dog).data)
 
     def post(self):
         data = request.get_json()

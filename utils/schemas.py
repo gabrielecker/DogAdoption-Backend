@@ -17,11 +17,11 @@ class DogSchema(Schema):
     born_date = fields.DateTime()
 
 
-class SchemaFactory():
+class SchemaCreator:
     @staticmethod
-    def get_schema(cls, many=False):
+    def get_schemas(cls):
         try:
             Class = getattr(import_module('utils.schemas'), '%sSchema' % cls)
-            return Class(many=many)
+            return (Class(), Class(many=True))
         except:
             raise Exception('Error: Class %sSchema does not exist.' % cls)

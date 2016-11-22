@@ -1,17 +1,13 @@
 # encoding: utf-8
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from utils.rest import register_views
 
 app = Flask(__name__)
 app.config.from_object('project.config')
 db = SQLAlchemy(app)
 
-# Import APIs after SQLAlchemy otherwise it's a circular import.
-from views.dogs import DogAPI
+# Urls imported after db to avoid circular import problems.
+from project.urls import urls # NOQA
 
-dog_view = DogAPI.as_view('dog_api')
-app.add_url_rule('/dogs/', defaults={'id': None},
-                 view_func=dog_view, methods=['GET'])
-app.add_url_rule('/dogs/', view_func=dog_view, methods=['POST'])
-app.add_url_rule('/dogs/<int:id>', view_func=dog_view,
-                 methods=['GET', 'PUT', 'DELETE'])
+register_views(app, urls)
