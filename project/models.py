@@ -1,5 +1,6 @@
 # encoding: utf-8
-from project.app import db
+from flask_login import UserMixin
+from project.app import bcrypt, db
 
 
 class Breed(db.Model):
@@ -31,3 +32,24 @@ class Dog(db.Model):
 
     def __repr__(self):
         return u'<Dog %s>' % self.name
+
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, nullable=False, unique=True)
+    email = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
+
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.password = password
+
+    def __repr__(self):
+        return u'<User %s>' % self.username
+
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password)
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)

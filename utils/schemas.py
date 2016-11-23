@@ -17,6 +17,19 @@ class DogSchema(Schema):
     born_date = fields.DateTime()
 
 
+class UserSchema(Schema):
+    id = fields.Int(dump_only=True)
+    username = fields.Str(required=True)
+    email = fields.Str(required=True)
+    password = fields.Str(required=True)
+
+
+class BreedDogsSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str(required=True)
+    dogs = fields.List(fields.Nested(DogSchema))
+
+
 class SchemaCreator:
     @staticmethod
     def get_schemas(cls):
