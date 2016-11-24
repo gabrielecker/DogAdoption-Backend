@@ -1,5 +1,6 @@
 # encoding: utf-8
 from flask import jsonify, request
+from flask_login import login_required
 from project.app import db
 from project.models import Breed
 from utils.rest import RestView
@@ -16,6 +17,7 @@ class BreedAPI(RestView):
             breed = Breed.query.get(id)
             return jsonify(self.parser.dump(breed).data)
 
+    @login_required
     def post(self):
         data = request.get_json()
         breed = Breed(**data)
@@ -23,12 +25,14 @@ class BreedAPI(RestView):
         db.session.commit()
         return self.make_response('Breed created successfully.')
 
+    @login_required
     def put(self, id):
         data = request.get_json()
         Breed.query.filter_by(id=id).update(data)
         db.session.commit()
         return self.make_response('Breed updated successfully.')
 
+    @login_required
     def delete(self, id):
         breed = Breed.query.get(id)
         db.session.delete(breed)

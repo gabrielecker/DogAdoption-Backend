@@ -1,5 +1,6 @@
 # encoding: utf-8
 from flask import jsonify, request
+from flask_login import login_required
 from project.app import db
 from project.models import Dog
 from utils.rest import RestView
@@ -16,6 +17,7 @@ class DogAPI(RestView):
             dog = Dog.query.get(id)
             return jsonify(self.parser.dump(dog).data)
 
+    @login_required
     def post(self):
         data = request.get_json()
         dog = Dog(**data)
@@ -23,12 +25,14 @@ class DogAPI(RestView):
         db.session.commit()
         return self.make_response('Dog created successfully.')
 
+    @login_required
     def put(self, id):
         data = request.get_json()
         Dog.query.filter_by(id=id).update(data)
         db.session.commit()
         return self.make_response('Dog updated successfully.')
 
+    @login_required
     def delete(self, id):
         dog = Dog.query.get(id)
         db.session.delete(dog)

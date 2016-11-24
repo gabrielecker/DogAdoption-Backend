@@ -15,7 +15,6 @@ def load_user(id):
 class UserAPI(RestView):
     schema = 'User'
 
-    @login_required
     def get(self, id):
         if id is None:
             users = User.query.all()
@@ -35,6 +34,7 @@ class UserAPI(RestView):
         except IntegrityError as error:
             return self.make_response(error.message, 400)
 
+    @login_required
     def put(self, id):
         try:
             data = request.get_json()
@@ -45,6 +45,7 @@ class UserAPI(RestView):
         except IntegrityError as error:
             return self.make_response(error.message, 400)
 
+    @login_required
     def delete(self, id):
         user = User.query.get(id)
         db.session.delete(user)
@@ -66,6 +67,7 @@ class LoginAPI(RestView):
 
 class LogoutAPI(RestView):
 
+    @login_required
     def get(self, id):
         logout_user()
         return self.make_response('Logged out successfully.')
