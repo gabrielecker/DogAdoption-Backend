@@ -1,7 +1,7 @@
 # encoding: utf-8
 from flask import jsonify, request
 from flask_login import login_user, login_required, logout_user
-from project.app import bcrypt, db, login_manager
+from project.app import bcrypt, db, login_manager, login_serializer
 from project.models import User
 from sqlalchemy.exc import IntegrityError
 from utils.rest import RestView
@@ -9,7 +9,22 @@ from utils.rest import RestView
 
 @login_manager.user_loader
 def load_user(id):
-    return User.query.get(id)
+    user = User.query.get(id)
+    return user
+
+
+@login_manager.request_loader
+def load_token(request):
+    token = request.headers.get('Authorization', None)
+    if token is not None:
+        try:
+            data = login_serializer.loads(token)
+        except:
+            return None
+        user = User.query.get(data[0])
+        if user and user.password == data[1]:
+            return user
+    return None
 
 
 class UserAPI(RestView):
@@ -30,7 +45,7 @@ class UserAPI(RestView):
             user.set_password(user.password)
             db.session.add(user)
             db.session.commit()
-            return self.make_response('User created successfully.')
+            return self.make_response('User created successfully.', 201)
         except IntegrityError as error:
             return self.make_response(error.message, 400)
 
@@ -59,7 +74,7 @@ class LoginAPI(RestView):
         data = request.get_json()
         user = User.query.filter_by(username=data['username']).first()
         if user and user.check_password(data['password']):
-            login_user(user)
+            login_user(user, remember=True)
             return self.make_response('Logged in successfully.')
         else:
             return self.make_response('Invalid username or password.', 400)

@@ -15,6 +15,7 @@ class DogSchema(Schema):
     breed = fields.Nested(BreedSchema)
     size = fields.Str()
     born_date = fields.DateTime()
+    location = fields.Str()
 
 
 class UserSchema(Schema):

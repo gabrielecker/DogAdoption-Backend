@@ -1,6 +1,6 @@
 # encoding: utf-8
 from flask_login import UserMixin
-from project.app import bcrypt, db
+from project.app import bcrypt, db, login_serializer
 
 
 class Breed(db.Model):
@@ -22,13 +22,18 @@ class Dog(db.Model):
     breed = db.relationship(Breed, backref='dogs')
     size = db.Column(db.String)
     born_date = db.Column(db.DateTime)
+    location = db.Column(db.String)
 
-    def __init__(self, name, description, size, born_date, breed_id):
+    def __init__(
+        self, name, description=None, size=None,
+        born_date=None, breed_id=None, location=None
+    ):
         self.name = name
         self.description = description
         self.size = size
         self.born_date = born_date
         self.breed_id = breed_id
+        self.location = location
 
     def __repr__(self):
         return u'<Dog %s>' % self.name
@@ -40,7 +45,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password=None):
         self.username = username
         self.email = email
         self.password = password
@@ -53,3 +58,7 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
+
+    def get_auth_token(self):
+        data = [str(self.id), self.password]
+        return login_serializer.dumps(data)
