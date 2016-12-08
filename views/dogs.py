@@ -9,6 +9,7 @@ from utils.rest import RestView
 class DogAPI(RestView):
     schema = 'Dog'
 
+    @login_required
     def get(self, id):
         if id is None:
             dogs = Dog.query.all()
@@ -23,7 +24,7 @@ class DogAPI(RestView):
         dog = Dog(**data)
         db.session.add(dog)
         db.session.commit()
-        return self.make_response('Dog created successfully.')
+        return self.make_response('Dog created successfully.', 201)
 
     @login_required
     def put(self, id):

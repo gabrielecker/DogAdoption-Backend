@@ -1,20 +1,29 @@
 # encoding: utf-8
-from flask import Flask
+from flask import Flask, jsonify
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from functools import partial
-from utils.rest import register_views
+from itsdangerous import URLSafeTimedSerializer
+from utils.rest import Router
+
 
 app = Flask(__name__)
-app.config.from_object('project.config')
+app.config.from_object('project.config.DevelopmentConfig')
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+router = Router(app)
+
+
+# TODO: Make it look better
+@app.errorhandler(400)
+@app.errorhandler(401)
+def error_handler(e):
+    return jsonify({'message': e.description}), e.code
 
 # Urls imported after db to avoid circular import problems.
 from project.urls import urls # NOQA
 
-app.register_views = partial(register_views, app)
-app.register_views(urls)
+router.register_views(urls)
