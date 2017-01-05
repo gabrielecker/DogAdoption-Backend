@@ -13,6 +13,7 @@ class DogSchema(Schema):
     name = fields.Str(required=True)
     description = fields.Str()
     breed = fields.Nested(BreedSchema)
+    photo = fields.Str()
     size = fields.Str()
     born_date = fields.DateTime()
     location = fields.Str()

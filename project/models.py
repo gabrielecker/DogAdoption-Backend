@@ -20,17 +20,19 @@ class Dog(db.Model):
     description = db.Column(db.String)
     breed_id = db.Column(db.Integer, db.ForeignKey('breed.id'))
     breed = db.relationship(Breed, backref='dogs')
+    photo = db.Column(db.Unicode)
     size = db.Column(db.String)
-    born_date = db.Column(db.DateTime)
+    born_date = db.Column(db.Date)
     location = db.Column(db.String)
 
     def __init__(
-        self, name, description=None, size=None,
+        self, name, description=None, size=None, photo=None,
         born_date=None, breed_id=None, location=None
     ):
         self.name = name
         self.description = description
         self.size = size
+        self.photo = photo
         self.born_date = born_date
         self.breed_id = breed_id
         self.location = location

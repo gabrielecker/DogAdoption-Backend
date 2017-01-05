@@ -9,7 +9,6 @@ from utils.rest import RestView
 class DogAPI(RestView):
     schema = 'Dog'
 
-    @login_required
     def get(self, id):
         if id is None:
             dogs = Dog.query.all()

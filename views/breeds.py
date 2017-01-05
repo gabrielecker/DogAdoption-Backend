@@ -17,6 +17,7 @@ class BreedAPI(RestView):
             breed = Breed.query.get(id)
             return jsonify(self.parser.dump(breed).data)
 
+    @login_required
     def post(self):
         data = request.get_json() or request.form
         breed = Breed(**dict(data))
