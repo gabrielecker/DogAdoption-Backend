@@ -2,6 +2,7 @@
 from project.app import app, db
 from project.models import Breed, Dog, User
 from flask_testing import TestCase
+import json
 import unittest
 
 
@@ -41,13 +42,18 @@ class BreedTestCase(BaseTestCase):
     def test_breeds_post_authorized(self):
         response = self.client.post(
             '/login/',
-            data={'username': 'test', 'password': 'test'}
+            data=json.dumps({'username': 'test', 'password': 'test'}),
+            content_type='application/json'
         )
         self.assertEqual(response.status_code, 200)
-
+        token = json.loads(response.data).get('token')
         data = {'name': 'Chihuahua'}
-        response = self.client.post('/breeds/', data=data)
-        self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            '/breeds/', data=json.dumps(data),
+            content_type='application/json',
+            headers={'Authorization': token}
+        )
+        self.assertEqual(response.status_code, 201)
 
 
 if __name__ == '__main__':
