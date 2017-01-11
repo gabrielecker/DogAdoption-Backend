@@ -10,7 +10,7 @@ from utils.rest import Router
 
 app = Flask(__name__)
 app.config.from_object('project.config.DevelopmentConfig')
-CORS(app)
+CORS(app, supports_credentials=True)
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager()
