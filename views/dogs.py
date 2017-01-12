@@ -11,9 +11,14 @@ class DogAPI(RestView):
 
     @login_required
     def get(self, id):
+        page = request.args.get('page') or 1
         if id is None:
-            dogs = Dog.query.all()
-            return jsonify(self.list_parser.dump(dogs).data)
+            dogs = Dog.query.paginate(page=int(page), per_page=6)
+            return jsonify({
+                'items': self.list_parser.dump(dogs.items).data,
+                'page': dogs.page,
+                'total': dogs.total
+            })
         else:
             dog = Dog.query.get(id)
             return jsonify(self.parser.dump(dog).data)

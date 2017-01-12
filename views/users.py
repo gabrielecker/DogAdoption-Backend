@@ -1,6 +1,6 @@
 # encoding: utf-8
 from flask import jsonify, request
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_required, logout_user
 from project.app import bcrypt, db, login_manager, login_serializer
 from project.models import User
 from sqlalchemy.exc import IntegrityError
@@ -30,6 +30,7 @@ def load_token(request):
 class UserAPI(RestView):
     schema = 'User'
 
+    @login_required
     def get(self, id):
         if id is None:
             users = User.query.all()
@@ -45,7 +46,7 @@ class UserAPI(RestView):
             user.set_password(user.password)
             db.session.add(user)
             db.session.commit()
-            return self.make_response('User created successfully.', 201)
+            return jsonify({'token': user.get_auth_token()})
         except IntegrityError as error:
             return self.make_response(error.message, 400)
 
@@ -74,8 +75,10 @@ class LoginAPI(RestView):
         data = request.get_json()
         user = User.query.filter_by(username=data['username']).first()
         if user and user.check_password(data['password']):
-            login_user(user, remember=True)
-            return self.make_response('Logged in successfully.')
+            return jsonify({
+                'username': user.username,
+                'token': user.get_auth_token()
+            })
         else:
             return self.make_response('Invalid username or password.', 400)
 

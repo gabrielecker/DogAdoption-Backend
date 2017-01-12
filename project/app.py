@@ -1,6 +1,7 @@
 # encoding: utf-8
 from flask import Flask, jsonify
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from itsdangerous import URLSafeTimedSerializer
@@ -9,6 +10,7 @@ from utils.rest import Router
 
 app = Flask(__name__)
 app.config.from_object('project.config.DevelopmentConfig')
+CORS(app, supports_credentials=True)
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager()
