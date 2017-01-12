@@ -9,7 +9,6 @@ from utils.rest import RestView
 class DogAPI(RestView):
     schema = 'Dog'
 
-    @login_required
     def get(self, id):
         page = request.args.get('page') or 1
         if id is None:

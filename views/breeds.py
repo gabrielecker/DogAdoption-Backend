@@ -17,9 +17,10 @@ class BreedAPI(RestView):
             breed = Breed.query.get(id)
             return jsonify(self.parser.dump(breed).data)
 
+    @login_required
     def post(self):
-        data = request.get_json() or request.form
-        breed = Breed(**dict(data))
+        data = request.get_json()
+        breed = Breed(**data)
         db.session.add(breed)
         db.session.commit()
         return self.make_response('Breed created successfully.', 201)

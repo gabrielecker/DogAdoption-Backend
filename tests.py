@@ -36,7 +36,11 @@ class BreedTestCase(BaseTestCase):
 
     def test_breeds_post_unauthorized(self):
         data = {'name': 'Chihuahua'}
-        response = self.client.post('/breeds/', data=data)
+        response = self.client.post(
+            '/breeds/',
+            data=json.dumps(data),
+            content_type='application/json'
+        )
         self.assertEqual(response.status_code, 401)
 
     def test_breeds_post_authorized(self):
