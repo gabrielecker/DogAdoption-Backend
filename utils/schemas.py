@@ -3,6 +3,12 @@ from importlib import import_module
 from marshmallow import Schema, fields
 
 
+class UserSchema(Schema):
+    username = fields.Str(required=True)
+    email = fields.Str(required=True)
+    phone = fields.Str()
+
+
 class BreedSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
@@ -13,17 +19,11 @@ class DogSchema(Schema):
     name = fields.Str(required=True)
     description = fields.Str()
     breed = fields.Nested(BreedSchema)
+    user = fields.Nested(UserSchema)
     photo = fields.Str()
     size = fields.Str()
     born_date = fields.DateTime()
     location = fields.Str()
-
-
-class UserSchema(Schema):
-    id = fields.Int(dump_only=True)
-    username = fields.Str(required=True)
-    email = fields.Str(required=True)
-    password = fields.Str(required=True)
 
 
 class BreedDogsSchema(Schema):

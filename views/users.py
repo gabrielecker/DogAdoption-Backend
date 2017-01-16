@@ -1,7 +1,7 @@
 # encoding: utf-8
 from flask import jsonify, request
 from flask_login import login_required, logout_user
-from project.app import bcrypt, db, login_manager, login_serializer
+from project.app import app, bcrypt, db, login_manager, login_serializer
 from project.models import User
 from sqlalchemy.exc import IntegrityError
 from utils.rest import RestView
@@ -16,14 +16,15 @@ def load_user(id):
 @login_manager.request_loader
 def load_token(request):
     token = request.headers.get('Authorization', None)
+    max_age = app.config['REMEMBER_COOKIE_DURATION'].total_seconds()
     if token is not None:
         try:
-            data = login_serializer.loads(token)
+            data = login_serializer.loads(token.split()[1], max_age=max_age)
+            user = User.query.get(data[0])
+            if user and [user.username, user.password] == data[1]:
+                return user
         except:
             return None
-        user = User.query.get(data[0])
-        if user and user.password == data[1]:
-            return user
     return None
 
 
@@ -46,7 +47,7 @@ class UserAPI(RestView):
             user.set_password(user.password)
             db.session.add(user)
             db.session.commit()
-            return jsonify({'token': user.get_auth_token()})
+            return jsonify({'token': 'Bearer ' + user.get_auth_token()})
         except IntegrityError as error:
             return self.make_response(error.message, 400)
 
@@ -77,10 +78,10 @@ class LoginAPI(RestView):
         if user and user.check_password(data['password']):
             return jsonify({
                 'username': user.username,
-                'token': user.get_auth_token()
+                'token': 'Bearer ' + user.get_auth_token()
             })
         else:
-            return self.make_response('Invalid username or password.', 400)
+            return self.make_response('Invalid username or password.', 401)
 
 
 class LogoutAPI(RestView):

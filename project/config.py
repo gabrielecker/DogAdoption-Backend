@@ -1,4 +1,5 @@
 # encodingg: utf-8
+import datetime
 
 
 class BaseConfig(object):
@@ -6,6 +7,7 @@ class BaseConfig(object):
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:@localhost/dog_adoption'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     DEBUG = False
+    REMEMBER_COOKIE_DURATION = datetime.timedelta(hours=24)
 
 
 class DevelopmentConfig(BaseConfig):

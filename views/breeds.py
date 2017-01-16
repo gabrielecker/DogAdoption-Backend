@@ -35,9 +35,12 @@ class BreedAPI(RestView):
     @login_required
     def delete(self, id):
         breed = Breed.query.get(id)
-        db.session.delete(breed)
-        db.session.commit()
-        return self.make_response('Breed deleted successfully.')
+        if breed:
+            db.session.delete(breed)
+            db.session.commit()
+            return self.make_response('Breed deleted successfully.')
+        else:
+            return self.make_response('Breed not found.', 404)
 
 
 class BreedDogsAPI(RestView):
