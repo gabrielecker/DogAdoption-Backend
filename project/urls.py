@@ -3,6 +3,7 @@ from views import dogs, breeds, users
 
 urls = [
     ('/dogs/', dogs.DogAPI.as_view('dog_api')),
+    ('/user_dogs/', dogs.UserDogsAPI.as_view('user_dogs_api')),
     ('/breeds/', breeds.BreedAPI.as_view('breed_api')),
     ('/breed_dogs/', breeds.BreedDogsAPI.as_view('breed_dogs_api')),
     ('/users/', users.UserAPI.as_view('user_api')),

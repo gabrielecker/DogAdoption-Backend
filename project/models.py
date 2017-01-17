@@ -56,7 +56,7 @@ class Dog(db.Model):
 
     def __init__(
         self, name, description=None, size=None, photo=None,
-        born_date=None, breed_id=None, location=None
+        born_date=None, breed_id=None, location=None, user_id=None
     ):
         self.name = name
         self.description = description
@@ -65,6 +65,7 @@ class Dog(db.Model):
         self.born_date = born_date
         self.breed_id = breed_id
         self.location = location
+        self.user_id = user_id
 
     def __repr__(self):
         return u'<Dog %s>' % self.name

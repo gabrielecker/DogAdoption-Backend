@@ -22,7 +22,7 @@ class DogSchema(Schema):
     user = fields.Nested(UserSchema)
     photo = fields.Str()
     size = fields.Str()
-    born_date = fields.DateTime()
+    born_date = fields.Date()
     location = fields.Str()
 
 

@@ -9,7 +9,6 @@ from utils.rest import RestView
 class DogAPI(RestView):
     schema = 'Dog'
 
-    @login_required
     def get(self, id):
         page = request.args.get('page') or 1
         if id is None:
@@ -48,3 +47,12 @@ class DogAPI(RestView):
             return self.make_response('Dog deleted successfully.')
         else:
             return self.make_response('Dog not found.', 404)
+
+
+class UserDogsAPI(RestView):
+    schema = 'Dog'
+
+    @login_required
+    def get(self, id):
+        dogs = Dog.query.filter_by(user=current_user)
+        return jsonify(self.list_parser.dump(dogs).data)
