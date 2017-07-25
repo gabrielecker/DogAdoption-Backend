@@ -1,4 +1,4 @@
-# DogAdoption-Backend
+# DogAdoption-Backend <img src="https://travis-ci.org/gabrielecker/DogAdoption-Backend.svg?branch=master">
 Building a Flask RESTful API to use in web and mobile apps and learning the framework.<br/>
 The project is basically a platform to register abandoned dogs and allow interested people to adopt them.<br/>
 Feel free to fork and help with the project. :)

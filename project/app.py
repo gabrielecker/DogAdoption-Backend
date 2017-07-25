@@ -1,4 +1,5 @@
 # encoding: utf-8
+from decouple import config
 from flask import Flask, jsonify
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -9,7 +10,7 @@ from utils.rest import Router
 
 
 app = Flask(__name__)
-app.config.from_object('project.config.DevelopmentConfig')
+app.config.from_object(config('APP_CONFIG'))
 CORS(app, supports_credentials=True)
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
