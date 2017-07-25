@@ -1,16 +1,21 @@
 language: python
 python: 2.7.13
+sudo: required
+before_install:
+  - sudo apt-get -qq update
 install:
-- pip install -r requirements.txt
-- pip install flake8
-before_script:
-  - "export DATABASE_URL='postgresql://postgres:@localhost/dog_adoption'"
+  - pip install -r requirements.txt
+  - pip install flake8
 script:
-- python tests.py
-- flake8
+  - python tests.py
+  - flake8
 deploy:
   provider: heroku
   api_key:
     secure: lJtD6nOJklXjSD3mQkfIZq/5hav6mjvbu8msadhApxbn0VUptfo8DOkOuyiL6tpztRsXv4/ptHYCzXpPEkXsNo3GNP6TMKrkJ+e3WjhGEV3T0HuJ/Ha0WDIlSL9yfpwlVXiL9CUwbBeqNTg2jpLEAEQNM8iXYlIfIGbbShzxBPF+2IC9TBovlyEQq7ee5avSIfuEugZu9F0Hn0y/kYQGzbqHXY2EJ/0lt6lXGpZo+OHs6M1VzRPPPeR2Vau2djwmX2106hEbtxuy/iKIRbcYxnVzgiUKFFck4hztRQDONTwJPGympjSteJzZY0sU8RLxcg++GuXHw/nqrFTiU3N4KyQpID8GtZGPQBf+RRc8zzF6R2brHtDV0HHi4uMKOLeLmdNGJACYjRxtg509OkPa6fqBZ7VlHz+NT3dpJFWBMSUZhj+yMcz/j1GDnwarO9NDeZiUxbYTK4aBJLCcJexFy3J5rQ8w7sVozcQuMFF9x1nYPTBLAisRdpsje56sNaleKjM4wZ4gpntREusByZP3BoB6Z2DYeHD7rRhWdHJ13896P9zr14eJXyf4oqsaoox6723u+YMRgxOsQkGWdgg63CGLDRpGzJrfsO7CoII4+gHwFumfI3f+U+YKKerIMPChwZJXf8IgrFVKCFYBeReoBsO2MQR9xhsLeD5raiUDLt4=
+  run:
+    - python manage.py db migrate
+    - python manage.py db upgrade
+  skip_cleanup: true
 env:
   secure: WN1EpVU+AHdwDV6tYM4IT1Z0V/BDtXvNKyRyYWwE6gHPTz03VX9VK0NmXLLDBetntUBRi1dra1PLWwHtQKTuti2lVaKlX/9E72mQ/eZEpx5PqkPOT7AxWza4T837j6wdgDiIuyo7jGdNox2Qnlhpb/xRStVB2PUCF3ktY3dARuHhT0ec2YUOjNDfkNSsS35Vddn31UtAVXbfkptQA/RP7x2C6I1iN2UW1HkG/hHRspBDrrCyqvfmmhnk5jI4hzxwqQhVrMfCpAr1ZQA+w3sfejBJHRQjP3UaOV+VdjOlx7aG/SkxiDAP3MBD01T6V9eTAxAYwUgA3K1ekp8V5Xbp79U3ZMq1OSOYbrNZoNk9Z88BsumomJvrbWs67Yk2SHee385fqAdrAT39v816lh66B/g0yzxWs5xXXwagv4L17qNDy/IPNY5exnlp5a+uoS58qEb9r9n+AwmOu4ZKbv73TuqrJ7VxG6SoJH2EA5B7hzpou/S231LUa8izXhs0s7pzB4YnlCJ7A3m3eVY8GocQ2EHENairtSrBYoAKMG8+ZOA23XvkqJAid+Qmza8yMrCjn0y4N34imO/tMtxk+ytRBCwK212sCO18YvarZwJuWAc2hwd3ye1EvFwcqiPfXQyjFqH0VRg6NQHS446+acoJwhglMbPA4Y3UXctQr43QrI8=
