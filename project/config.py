@@ -1,11 +1,11 @@
-# encodingg: utf-8
+# encoding: utf-8
+from decouple import config
 import datetime
-import os
 
 
 class BaseConfig(object):
-    SECRET_KEY = os.environ['SECRET_KEY']
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SECRET_KEY = config('SECRET_KEY')
+    SQLALCHEMY_DATABASE_URI = config('DATABASE_URL', default='')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     DEBUG = False
     REMEMBER_COOKIE_DURATION = datetime.timedelta(hours=24)
